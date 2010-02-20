@@ -9,11 +9,11 @@ Mail::IMAPTalk::MailCache - Handles building a Mail::Cache cache for Mail::IMAPT
 
 =head1 VERSION
 
-Version 0.0.0
+Version 0.0.1
 
 =cut
 
-our $VERSION = '0.0.0';
+our $VERSION = '0.0.1';
 
 
 =head1 SYNOPSIS
@@ -86,10 +86,17 @@ sub cache {
 		#process it if it is set to force
 		#or if it does not exist
 		if( $force || (!defined($exists{$uid})) ){
-			my $headers=$imap->fetch($uid, 'rfc822.header');
-			my $size=$imap->fetch($sorted->[$int], 'rfc822.size');
+#			my $headers=$imap->fetch($uid, 'rfc822.header');
+			my $headers=$imap->fetch($uid, 'body.peek[HEADER]');
+#			use Data::Dumper;
+#			print Dumper($headers2->{$uid}{body})."\n\n\n";
+#			print Dumper($headers->{$uid}{'rfc822.header'})."\n";
 			
-			$mc->setUID($uid, $headers->{$uid}{'rfc822.header'},
+			my $size=$imap->fetch($sorted->[$int], 'rfc822.size');
+
+#			sleep 50000;
+			
+			$mc->setUID($uid, $headers->{$uid}{'body'},
 						$size->{$uid}{'rfc822.size'});
 		}
 
